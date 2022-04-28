@@ -1,13 +1,12 @@
 #include <Arduino.h>
-#include <WiFi.h>
-#include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <EasyHTTP.h>
+#define SensorPin 4  // used for ESP32
 
 char* ssid = (char*) "VIVOFIBRA-55C0";
 char* password = (char*) "6FCBCC76C2";
 
-String baseURL = "https://aqueous-coast-43643.herokuapp.com";
+String baseURL = "https://sensor-info.herokuapp.com/test";
 
 EasyHTTP http(ssid, password);
 
@@ -18,21 +17,22 @@ void setup() {
 }
 
 void loop() {
+
+  float sensorValue = analogRead(SensorPin);
+  Serial.println(sensorValue);
+
+
   DynamicJsonDocument doc(2048);
   String payload = "";
 
-  char* user = (char*) "john";
-  char* password = (char*) "I wnat to describe tahr";
-
-  doc["user"] = user;
-  doc["password"] = password;
+  doc["data"] = sensorValue;
   serializeJson(doc, payload);
 
   Serial.println(payload);
 
-  String response = http.post("/login", payload);
+  String response = http.post("/sensor-information", payload);
   Serial.println(response);
 
-  delay(300000);
+  delay(5000);
 } 
 
