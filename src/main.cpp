@@ -1,12 +1,14 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <EasyHTTP.h>
-#define SensorPin 4  // used for ESP32
+#define SENSOR_PIN 34  // used for ESP32
 
-char* ssid = (char*) "VIVOFIBRA-55C0";
-char* password = (char*) "6FCBCC76C2";
+int sensorValue = 0;
 
-String baseURL = "https://sensor-info.herokuapp.com/test";
+char* ssid = (char*) "Redmi";
+char* password = (char*) "senha111";
+
+String baseURL = "https://sensor-info.herokuapp.com";
 
 EasyHTTP http(ssid, password);
 
@@ -18,8 +20,12 @@ void setup() {
 
 void loop() {
 
-  float sensorValue = analogRead(SensorPin);
+  sensorValue = analogRead(SENSOR_PIN);
+  sensorValue = 100 - (((sensorValue * 100)) / (4095));
+  Serial.print("Moisture : ");
   Serial.println(sensorValue);
+  Serial.println("%");
+  
 
 
   DynamicJsonDocument doc(2048);
